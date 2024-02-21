@@ -1,6 +1,8 @@
 package reflection;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 @SuppressWarnings("ALL")
 public class Factory {
@@ -14,8 +16,21 @@ public class Factory {
             Method afterConstrutorMethod = theClass.getMethod("afterConstructor"); // busca o método informado
             afterConstrutorMethod.invoke(animal);
         } catch (NoSuchMethodException e) {
-            e.printStackTrace();
         }
-        return animal; // já coloca no retorno
+
+        // a diferença entre getMethods e getDeclaredMethods é que o primeiro busca em toda a hierarquia considerando a herança e o segundo somente o da classe
+        Arrays.stream(theClass.getDeclaredMethods())
+                .forEach(m -> {
+                    if (m.getAnnotation(OnCreated.class) != null) {
+                        try {
+                            m.setAccessible(true); // permite a Reflection API acessar elementos privados
+                            m.invoke(animal);
+                        } catch (IllegalAccessException | InvocationTargetException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                });
+
+        return animal;
     }
 }
