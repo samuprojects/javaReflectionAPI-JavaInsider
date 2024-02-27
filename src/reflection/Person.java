@@ -14,6 +14,14 @@ public class Person {
     public Person() {
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
     // criado para mostrar os atributos após alteração via Reflection API
     @Override
     public String toString() {
