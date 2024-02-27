@@ -9,6 +9,7 @@ public class Circle {
 
     private double radius;
 
+    @Inject // automaticamente o valor de PI vem para este atributo
     private double pi;
 
     public Circle() {
